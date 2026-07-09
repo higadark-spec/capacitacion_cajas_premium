@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú de Capacitación - Cajas Premium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col justify-between font-sans">
+
+    <header class="bg-[#1A2530] text-white p-6 shadow-md text-center border-b-4 border-[#D4AF37]">
+        <h1 class="text-2xl md:text-3xl font-bold tracking-wider text-[#D4AF37]">PREMIUM BOXES INDUCCIÓN</h1>
+        <p class="text-xs md:text-sm text-gray-400 mt-1">Plataforma de Validación Operativa por Estaciones de Trabajo</p>
+    </header>
+
+    <main class="container mx-auto p-6 max-w-5xl flex-grow">
+        <div class="mb-6 bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-900 text-center shadow-sm">
+            💡 <strong>Instrucción para el participante:</strong> Puedes seleccionar cualquier estación para comenzar tu entrenamiento. Para certificar una estación, debes aprobar el test final respondiendo correctamente el 100% de las preguntas.
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="contenedor-menu">
+            </div>
+    </main>
+
+    <footer class="bg-gray-100 text-center py-4 text-xs text-gray-500 border-t">
+        UNAJ - Escuela Profesional de Ingeniería Industrial &copy; 2026
+    </footer>
+
+    <script src="js/data.js"></script>
+    
+    <script>
+        // Función para renderizar dinámicamente las tarjetas del menú
+        function renderizarMenu() {
+            const contenedor = document.getElementById('contenedor-menu');
+            contenedor.innerHTML = ''; // Limpiar contenedor
+
+            datosEstaciones.forEach((estacion) => {
+                // Verificar si esta estación específica ya fue aprobada en intentos previos
+                const esAprobada = localStorage.getItem(`estacion_${estacion.id}_aprobada`) === "true";
+                
+                // Definir estilos dinámicos si es el cuello de botella
+                const esCuelloBotella = estacion.numero === 2;
+                const badgeEstacion = esCuelloBotella 
+                    ? `<span class="bg-red-100 text-red-700 text-xs font-bold px-2.5 py-0.5 rounded-full uppercase">Estación 2 - Cuello de Botella</span>`
+                    : `<span class="bg-amber-100 text-[#1A2530] text-xs font-bold px-2.5 py-0.5 rounded-full uppercase">Estación ${estacion.numero}</span>`;
+
+                const tarjetaHTML = `
+                    <div class="bg-white rounded-xl shadow-sm hover:shadow-md p-5 border ${esAprobada ? 'border-green-300 bg-green-50/20' : 'border-gray-100'} flex flex-col justify-between hover:border-[#D4AF37] transition duration-200">
+                        <div>
+                            <div class="flex justify-between items-center mb-3">
+                                ${badgeEstacion}
+                                ${esAprobada ? '<span class="text-xs font-bold text-green-600 flex items-center gap-1">🏆 Aprobada</span>' : ''}
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">${estacion.nombre}</h3>
+                            <p class="text-xs font-mono text-gray-500 mb-4 bg-gray-100 inline-block px-2 py-1 rounded">⏱️ Tiempo Estándar: ${estacion.tiempoEstandar}</p>
+                            <p class="text-sm text-gray-600 line-clamp-3 mb-4">${estacion.instruccion}</p>
+                        </div>
+                        <button onclick="irAEstacion(${estacion.id})" class="w-full ${esAprobada ? 'bg-green-600 hover:bg-green-700' : 'bg-[#1A2530] hover:bg-gray-800'} text-white text-center py-2.5 rounded-lg font-semibold shadow transition duration-150">
+                            ${esAprobada ? 'Repasar Módulo' : 'Iniciar Estación'}
+                        </button>
+                    </div>
+                `;
+                contenedor.innerHTML += tarjetaHTML;
+            });
+        }
+
+        function irAEstacion(id) {
+            localStorage.setItem('estacionSeleccionada', id);
+            window.location.href = 'app.html'; // Nos moverá a la pantalla de aprendizaje que haremos en la siguiente parte
+        }
+
+        // Ejecutar la renderización al cargar la página
+        window.onload = renderizarMenu;
+    </script>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estación de Trabajo - Capacitación</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col justify-between font-sans">
+
+    <header class="bg-[#1A2530] text-white p-4 shadow-md sticky top-0 z-50 border-b-2 border-[#D4AF37]">
+        <div class="container mx-auto flex justify-between items-center max-w-4xl">
+            <div>
+                <button onclick="volverAlMenu()" class="text-xs text-amber-400 hover:underline flex items-center gap-1 mb-1">
+                    ⬅️ Volver al Menú
+                </button>
+                <h1 id="header-titulo" class="text-lg md:text-xl font-bold text-white">Cargando Estación...</h1>
+            </div>
+            <div id="reloj-takt" class="text-right">
+                <span class="text-[10px] text-gray-400 block uppercase font-bold tracking-wider">Simulador Takt Time</span>
+                <span id="cronometro" class="text-xl font-mono font-bold text-amber-500">00:00</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 max-w-3xl flex-grow">
+
+        <div id="seccion-aprendizaje" class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+            <div class="flex justify-between items-center border-b pb-3 mb-4">
+                <h2 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+                    📖 Procedimiento Operativo Estándar
+                </h2>
+                <span id="badge-tiempo-estandar" class="bg-gray-100 text-gray-600 font-mono text-xs px-2.5 py-1 rounded">
+                    Tiempo Estándar: --:--
+                </span>
+            </div>
+
+            <div class="bg-gray-950 rounded-lg aspect-video flex flex-col items-center justify-center border relative overflow-hidden text-center p-4 mb-4">
+                <span class="absolute top-2 left-2 bg-black/60 text-amber-400 text-[10px] px-2 py-0.5 rounded font-mono uppercase tracking-wider">
+                    🎥 Video de Inducción Activo
+                </span>
+                <div id="video-simulador">
+                    <p class="text-4xl mb-2">📦</p>
+                    <p class="text-xs text-gray-400 max-w-md mx-auto" id="video-descripcion">
+                        Aquí se reproduce el bucle visual o GIF descriptivo del movimiento de manos requerido en el puesto de trabajo.
+                    </p>
+                </div>
+            </div>
+
+            <div id="alerta-industrial" class="bg-amber-50 border-l-4 border-amber-500 p-3 rounded text-sm text-amber-900 mb-6">
+                </div>
+
+            <div class="mb-6">
+                <h3 class="font-bold text-gray-800 text-sm mb-1 uppercase tracking-wider">Instrucciones del Puesto:</h3>
+                <p id="texto-instruccion" class="text-sm text-gray-600 leading-relaxed bg-gray-50 p-3 rounded border">
+                    </p>
+            </div>
+
+            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
+                <div class="text-center sm:text-left">
+                    <p class="text-xs font-bold text-gray-700">⏱️ Práctica de Ritmo Operativo</p>
+                    <p class="text-[11px] text-gray-500">Inicia el cronómetro para medir si logras terminar el ensamblaje en el tiempo estándar.</p>
+                </div>
+                <button id="btn-cronometro" onclick="controlarCronometro()" class="w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs py-2 px-4 rounded transition">
+                    Iniciar Simulación de Ritmo
+                </button>
+            </div>
+
+            <button onclick="activarExamen()" class="w-full bg-[#1A2530] hover:bg-gray-800 text-white font-bold py-3 px-6 rounded-lg shadow text-center block transition">
+                Comprendido, Rendir Evaluación de Estación 📝
+            </button>
+        </div>
+
+        <div id="seccion-examen" class="bg-white rounded-xl shadow-md p-6 border-2 border-[#1A2530] hidden">
+            <div class="border-b pb-3 mb-4">
+                <span class="text-xs font-bold uppercase tracking-widest text-red-600 block">Evaluación Obligatoria</span>
+                <h2 id="examen-titulo" class="text-xl font-bold text-gray-800">Cuestionario de Validación</h2>
+                <p class="text-xs text-gray-500 mt-1">Requisito de aprobación: Responder correctamente el 100% de las preguntas.</p>
+            </div>
+
+            <div id="quiz-dynamic-content"></div>
+
+            <button onclick="calificarExamen()" class="w-full bg-[#D4AF37] hover:bg-amber-600 text-white font-bold py-3 px-6 rounded-lg shadow transition">
+                Enviar Respuestas para Validación
+            </button>
+        </div>
+
+        <div id="seccion-resultado" class="bg-white rounded-xl shadow-lg p-8 text-center hidden">
+            <div id="resultado-icono" class="text-6xl mb-4"></div>
+            <h2 id="resultado-titulo" class="text-2xl font-bold mb-2"></h2>
+            <p id="resultado-mensaje" class="text-gray-600 text-sm max-w-md mx-auto mb-6"></p>
+            <div id="resultado-acciones" class="flex justify-center gap-4">
+                </div>
+        </div>
+
+    </main>
+
+    <footer class="bg-gray-100 text-center py-3 text-[10px] text-gray-400 border-t">
+        UNAJ - Industrial Engineering Platform &copy; 2026
+    </footer>
+
+    <script src="js/data.js"></script>
+    <script src="js/quiz.js"></script>
+    
+    <script>
+        let estacionActual = null;
+        let tiempoSegundos = 0;
+        let intervaloCronometro = null;
+        let cronometroCorriendo = false;
+
+        function inicializarApp() {
+            const id = localStorage.getItem('estacionSeleccionada') || 0;
+            estacionActual = datosEstaciones[id];
+
+            // Renderizar textos e interfaz instructiva
+            document.getElementById('header-titulo').innerText = `Estación ${estacionActual.numero}: ${estacionActual.nombre}`;
+            document.getElementById('badge-tiempo-estandar').innerText = `Tiempo Estándar: ${estacionActual.tiempoEstandar}`;
+            document.getElementById('texto-instruccion').innerText = estacionActual.instruccion;
+            document.getElementById('alerta-industrial').innerHTML = `⚠️ <strong>Nota Técnica:</strong> ${estacionActual.alertas}`;
+            document.getElementById('video-descripcion').innerText = `Visualizando la ejecución cinemática y ergonomía de la estación de ${estacionActual.nombre} dentro del rango de ${estacionActual.tiempoEstandar}.`;
+        }
+
+        // Lógica del simulador de Takt Time
+        function controlarCronometro() {
+            const btn = document.getElementById('btn-cronometro');
+            if (!cronometroCorriendo) {
+                cronometroCorriendo = true;
+                btn.innerText = "Detener Simulación";
+                btn.className = "w-full sm:w-auto bg-red-500 hover:bg-red-600 text-white font-bold text-xs py-2 px-4 rounded transition";
+                
+                intervaloCronometro = setInterval(() => {
+                    tiempoSegundos++;
+                    let mins = Math.floor(tiempoSegundos / 60).toString().padStart(2, '0');
+                    let secs = (tiempoSegundos % 60).toString().padStart(2, '0');
+                    document.getElementById('cronometro').innerText = `${mins}:${secs}`;
+                }, 1000);
+            } else {
+                cronometroCorriendo = false;
+                btn.innerText = "Reiniciar Simulación";
+                btn.className = "w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs py-2 px-4 rounded transition";
+                clearInterval(intervaloCronometro);
+                tiempoSegundos = 0;
+            }
+        }
+
+        function activarExamen() {
+            // Detener cronómetros si estuvieran activos
+            clearInterval(intervaloCronometro);
+            
+            document.getElementById('seccion-aprendizaje').classList.add('hidden');
+            document.getElementById('seccion-examen').classList.remove('hidden');
+            
+            // Llamamos a la función global que cargará el Quiz (está en quiz.js)
+            cargarQuiz();
+        }
+
+        function mostrarPantallaResultado(aprobado, correctas, totales) {
+            document.getElementById('seccion-examen').classList.add('hidden');
+            const seccionRes = document.getElementById('seccion-resultado');
+            seccionRes.classList.remove('hidden');
+
+            const icono = document.getElementById('resultado-icono');
+            const titulo = document.getElementById('resultado-titulo');
+            const mensaje = document.getElementById('resultado-mensaje');
+            const acciones = document.getElementById('resultado-acciones');
+            acciones.innerHTML = '';
+
+            if (aprobado) {
+                icono.innerText = "🏆";
+                titulo.innerText = "¡Validación Exitosa!";
+                titulo.className = "text-2xl font-bold text-green-600 mb-2";
+                mensaje.innerText = `Puntaje: ${correctas}/${totales}. Has asimilado perfectamente el Procedimiento Operativo Estándar y los criterios de calidad establecidos. El módulo ha sido liberado con éxito.`;
+
+                const btnMenu = document.createElement('button');
+                btnMenu.className = "bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 px-5 rounded-lg shadow transition text-sm";
+                btnMenu.innerText = "Regresar al Menú Principal ➡️";
+                btnMenu.onclick = volverAlMenu;
+                acciones.appendChild(btnMenu);
+            } else {
+                icono.innerText = "🔄";
+                titulo.innerText = "Revisión Obligatoria";
+                titulo.className = "text-2xl font-bold text-red-600 mb-2";
+                mensaje.innerText = `Puntaje: ${correctas}/${totales}. No has alcanzado el 100% de efectividad requerido para operar de manera autónoma. Debes volver a repasar la instrucción técnica y el video descriptivo.`;
+
+                const btnRepetir = document.createElement('button');
+                btnRepetir.className = "bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-5 rounded-lg shadow transition text-sm";
+                btnRepetir.innerText = "Volver a ver el Video e Instrucción";
+                btnRepetir.onclick = () => {
+                    seccionRes.classList.add('hidden');
+                    document.getElementById('seccion-aprendizaje').classList.remove('hidden');
+                    document.getElementById('cronometro').innerText = "00:00";
+                };
+                acciones.appendChild(btnRepetir);
+            }
+        }
+
+        function volverAlMenu() {
+            window.location.href = 'index.html';
+        }
+
+        window.onload = inicializarApp;
+    </script>
+</body>
+</html>
