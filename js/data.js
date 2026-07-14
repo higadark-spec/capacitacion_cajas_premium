@@ -6,6 +6,7 @@ const datosEstaciones = [
         numero: 1,
         nombre: "Diseño y Trazado",
         tiempoEstandar: "05:45 min",
+        youtubeId: "6DspyzSTRSA", // <--- ID del video de la Estación 1
         instruccion: "Tomar la plancha de cartón microcorrugado y realizar el trazado de las dimensiones nominales (Base: 18 cm, Profundidad: 25 cm, Alto: 12.2 cm). Es MANDATORIO usar la plantilla física guía. Medir manualmente con regla provoca una desviación crítica del +448% en el tiempo operativo.",
         alertas: "¡Ojo! Una desviación mayor a ±2 mm en esta estación causará el rechazo automático del producto en el control de calidad final.",
         preguntas: [
@@ -31,6 +32,7 @@ const datosEstaciones = [
         numero: 2,
         nombre: "Corte de Piezas",
         tiempoEstandar: "08:34 min",
+        youtubeId: "6DspyzSTRSA", // <--- ID del video de la Estación 1
         instruccion: "Realizar el corte de las piezas trazadas utilizando el bisturí industrial sobre la mesa de corte. Mantener un ángulo constante de 45 grados para asegurar la limpieza del corte. Esta estación está identificada cuantitativamente como el Cuello de Botella del sistema productivo.",
         alertas: "Monitorear el ritmo de trabajo. Al ser el cuello de botella, cualquier retraso aquí detiene el Takt Time de toda la línea de producción.",
         preguntas: [
