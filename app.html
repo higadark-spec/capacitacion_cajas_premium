@@ -61,38 +61,50 @@
                 </span>
             </div>
 
-            <div class="bg-slate-950 rounded-xl aspect-video flex flex-col items-center justify-center border border-slate-800 relative overflow-hidden text-center p-6 mb-6 shadow-inner group">
-                <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-60 z-10"></div>
-                <span class="absolute top-3 left-3 bg-black/70 backdrop-blur-sm text-premiumGold text-[10px] px-2.5 py-1 rounded-full font-mono uppercase tracking-widest border border-premiumGold/20 z-20 live-pulse">
-                    🔴 Video de Inducción Activo
-                </span>
-                <div id="video-simulador" class="z-20 transform group-hover:scale-105 transition-transform duration-300">
-                    <div class="w-16 h-16 bg-premiumDark/80 border border-slate-700 text-premiumGold rounded-full flex items-center justify-center text-2xl mx-auto mb-3 shadow-premium">📦</div>
-                    <p class="text-xs text-slate-400 max-w-md mx-auto leading-relaxed" id="video-descripcion">
-                        Aquí se reproduce el bucle visual o GIF descriptivo del movimiento de manos requerido en el puesto de trabajo.
-                    </p>
-                </div>
+            <div class="bg-slate-950 rounded-xl aspect-video border border-slate-800 relative overflow-hidden mb-6 shadow-inner">
+                <iframe 
+                    id="video-frame"
+                    class="w-full h-full" 
+                    src="" 
+                    title="Reproductor de Video de Capacitación" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    referrerpolicy="strict-origin-when-cross-origin" 
+                    allowfullscreen>
+                </iframe>
             </div>
 
             <div id="alerta-industrial" class="bg-amber-950/40 border-l-4 border-premiumGold p-4 rounded-xl text-sm text-amber-200/90 mb-6 border border-amber-900/30 shadow-sm leading-relaxed">
-                </div>
+            </div>
 
             <div class="mb-6">
                 <h3 class="font-black text-slate-400 text-xs mb-2 uppercase tracking-widest flex items-center gap-1.5">
                     <span class="w-1.5 h-1.5 bg-premiumGold rounded-full"></span> Instrucciones Básicas del Puesto:
                 </h3>
                 <p id="texto-instruccion" class="text-sm text-slate-300 leading-relaxed bg-premiumDark/60 p-4 rounded-xl border border-slate-800">
-                    </p>
+                </p>
             </div>
 
-            <div class="bg-premiumDark/80 p-5 rounded-xl border border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 shadow-inner">
-                <div class="text-center sm:text-left">
-                    <p class="text-sm font-bold text-white flex items-center justify-center sm:justify-start gap-1">⏱️ Práctica de Ritmo Operativo</p>
-                    <p class="text-xs text-slate-400 mt-0.5">Mide si eres capaz de completar la tarea dentro del rango estándar.</p>
+            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 flex flex-col gap-4 mb-6">
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="text-center sm:text-left">
+                        <p class="text-xs font-bold text-gray-700">⏱️ Práctica de Ritmo Operativo</p>
+                        <p class="text-[11px] text-gray-500">Inicia el cronómetro para medir si logras terminar el ensamblaje en el tiempo estándar.</p>
+                    </div>
+                    <button id="btn-cronometro" onclick="controlarCronometro()" class="w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs py-2 px-4 rounded transition">
+                        Iniciar Simulación de Ritmo
+                    </button>
                 </div>
-                <button id="btn-cronometro" onclick="controlarCronometro()" class="w-full sm:w-auto bg-premiumGold hover:bg-premiumGoldHover text-premiumDark font-extrabold text-xs py-2.5 px-5 rounded-lg transition-all duration-150 shadow-gold-glow uppercase tracking-wider">
-                    Iniciar Simulación
-                </button>
+                
+                <div class="border-t pt-3 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="text-center sm:text-left">
+                        <p class="text-xs font-bold text-gray-700">📂 Evidencia de Trabajo (Opcional)</p>
+                        <p class="text-[11px] text-gray-500">¿Grabaste tu simulación? Sube el video para que el supervisor valide tu técnica en el almacén.</p>
+                    </div>
+                    <a href="https://forms.gle/cYbGuPobzzUiNCUK6" class="w-full sm:w-auto bg-[#1A2530] hover:bg-gray-800 text-[#D4AF37] text-center font-bold text-xs py-2 px-4 rounded border border-[#D4AF37] transition inline-block">
+                        Subir Video a Drive ⬆️
+                    </a>
+                </div>
             </div>
 
             <button onclick="activarExamen()" class="w-full bg-gradient-to-r from-premiumGold to-amber-500 text-premiumDark font-black py-4 px-6 rounded-xl shadow-gold-glow text-center block transition-transform active:scale-[0.99] uppercase tracking-widest text-sm hover:brightness-110">
@@ -119,7 +131,7 @@
             <h2 id="resultado-titulo" class="text-2xl font-black mb-2 tracking-wide"></h2>
             <p id="resultado-mensaje" class="text-slate-300 text-sm max-w-md mx-auto mb-8 leading-relaxed"></p>
             <div id="resultado-acciones" class="flex justify-center gap-4">
-                </div>
+            </div>
         </div>
 
     </main>
@@ -145,13 +157,16 @@
             document.getElementById('badge-tiempo-estandar').innerText = `⏱️ Estándar: ${estacionActual.tiempoEstandar}`;
             document.getElementById('texto-instruccion').innerText = estacionActual.instruccion;
             document.getElementById('alerta-industrial').innerHTML = `💡 <strong>Nota Técnica de Calidad:</strong> ${estacionActual.alertas}`;
-            document.getElementById('video-descripcion').innerText = `Visualizando simulación cinemática en tiempo real para la estación de ${estacionActual.nombre}. Rango de control objetivo de procesos: ${estacionActual.tiempoEstandar}.`;
+            
+            // ASIGNAR LA URL DEL IFRAME DE FORMA DINÁMICA
+            // Se usa "https://www.youtube.com/embed/" seguido de la propiedad youtubeId configurada en js/data.js
+            const videoId = estacionActual.youtubeId || "6DspyzSTRSA";
+            document.getElementById('video-frame').src = `https://www.youtube.com/embed/${videoId}?rel=0`;
         }
 
         function controlarCronometro() {
             const btn = document.getElementById('btn-cronometro');
             if (!cronometroCorriendo) {
-                cronorchetroCorriendo = true;
                 cronometroCorriendo = true;
                 btn.innerText = "Detener Ritmo";
                 btn.className = "w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white font-bold text-xs py-2.5 px-5 rounded-lg transition shadow-md uppercase tracking-wider";
