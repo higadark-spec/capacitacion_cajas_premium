@@ -6,7 +6,7 @@ const datosEstaciones = [
         numero: 1,
         nombre: "Diseño y Trazado",
         tiempoEstandar: "05:45 min",
-        youtubeId: "6DspyzSTRSA", // <--- ID del video de la Estación 1
+        youtubeId: "6DspyzSTRSA",
         instruccion: "Tomar la plancha de cartón microcorrugado y realizar el trazado de las dimensiones nominales (Base: 18 cm, Profundidad: 25 cm, Alto: 12.2 cm). Es MANDATORIO usar la plantilla física guía. Medir manualmente con regla provoca una desviación crítica del +448% en el tiempo operativo.",
         alertas: "¡Ojo! Una desviación mayor a ±2 mm en esta estación causará el rechazo automático del producto en el control de calidad final.",
         preguntas: [
@@ -32,7 +32,7 @@ const datosEstaciones = [
         numero: 2,
         nombre: "Corte de Piezas",
         tiempoEstandar: "08:34 min",
-        youtubeId: "6DspyzSTRSA", // <--- ID del video de la Estación 1
+        youtubeId: "XD8W5ASulUc",
         instruccion: "Realizar el corte de las piezas trazadas utilizando el bisturí industrial sobre la mesa de corte. Mantener un ángulo constante de 45 grados para asegurar la limpieza del corte. Esta estación está identificada cuantitativamente como el Cuello de Botella del sistema productivo.",
         alertas: "Monitorear el ritmo de trabajo. Al ser el cuello de botella, cualquier retraso aquí detiene el Takt Time de toda la línea de producción.",
         preguntas: [
@@ -58,6 +58,7 @@ const datosEstaciones = [
         numero: 3,
         nombre: "Plegado Estructural",
         tiempoEstandar: "04:00 min",
+        youtubeId: "xcHxZVeDIfo",
         instruccion: "Marcar firmemente las aristas y líneas guía antes de realizar el doblez definitivo. Asegurar que las pestañas mantengan la cuadratura y el ángulo de encaje de la caja premium.",
         alertas: "No doblar con demasiada fuerza para evitar romper el canal del cartón microcorrugado.",
         preguntas: [
@@ -83,6 +84,7 @@ const datosEstaciones = [
         numero: 4,
         nombre: "Pegado y Adhesión",
         tiempoEstandar: "04:45 min",
+        youtubeId: "vFOBE_cF2G4",
         instruccion: "Aplicar un cordón continuo de silicona caliente en las pestañas indicadas. Colocar los cierres de velcro en los puntos exactos del diseño. Para asegurar la calidad premium y evitar fallas críticas, ejercer presión bilateral fija por un mínimo de 3 minutos.",
         alertas: "El desprendimiento del velcro o silicona es una de las fallas más comunes detectadas en la validación real. Respeta el tiempo de presión.",
         preguntas: [
@@ -108,6 +110,7 @@ const datosEstaciones = [
         numero: 5,
         nombre: "Acabado y Control de Calidad",
         tiempoEstandar: "05:05 min",
+        youtubeId: "ovtYvuvg0Z4",
         instruccion: "Inspeccionar minuciosamente la caja utilizando el Formulario de Validación de Calidad CC-FP-001 v.02. Verificar los 11 ítems críticos y 8 ítems no críticos. Retirar con cuidado cualquier excedente de silicona o suciedad superficial.",
         alertas: "Esta es la última línea de defensa antes de que el producto llegue al cliente. La precisión en la evaluación es vital.",
         preguntas: [
