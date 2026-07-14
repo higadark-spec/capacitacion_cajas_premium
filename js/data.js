@@ -1,129 +1,243 @@
-// js/data.js
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estación de Trabajo - Capacitación Premium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        premiumDark: '#0F172A',     // Azul noche profundo
+                        premiumSlate: '#1E293B',    // Pizarra corporativa
+                        premiumGold: '#D4AF37',     // Oro metálico premium
+                        premiumGoldHover: '#B8932A' // Oro más oscuro para interacciones
+                    },
+                    boxShadow: {
+                        'premium': '0 10px 30px -10px rgba(15, 23, 42, 0.3)',
+                        'gold-glow': '0 4px 20px -2px rgba(212, 175, 55, 0.4)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Animación sutil de respiración para el cartel de simulación en vivo */
+        @keyframes pulse-subtle {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+        .live-pulse { animation: pulse-subtle 2s infinite; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 min-h-screen flex flex-col justify-between font-sans antialiased text-slate-200">
 
-const datosEstaciones = [
-    {
-        id: 0,
-        numero: 1,
-        nombre: "Diseño y Trazado",
-        tiempoEstandar: "05:45 min",
-        instruccion: "Tomar la plancha de cartón microcorrugado y realizar el trazado de las dimensiones nominales (Base: 18 cm, Profundidad: 25 cm, Alto: 12.2 cm). Es MANDATORIO usar la plantilla física guía. Medir manualmente con regla provoca una desviación crítica del +448% en el tiempo operativo.",
-        alertas: "¡Ojo! Una desviación mayor a ±2 mm en esta estación causará el rechazo automático del producto en el control de calidad final.",
-        preguntas: [
-            {
-                pregunta: "¿Qué herramienta es obligatoria en esta estación para evitar un retraso crítico del 448%?",
-                opciones: ["Regla metálica milimetrada tradicional", "Plantilla física guía prediseñada (matriz)", "Cálculo visual según la experiencia"],
-                correcta: 1
-            },
-            {
-                pregunta: "¿Cuál es la tolerancia geométrica dimensional estricta permitida para el trazado?",
-                opciones: ["± 5 mm", "± 10 mm", "± 2 mm"],
-                correcta: 2
-            },
-            {
-                pregunta: "Si un cartón es mal trazado desde esta estación, ¿cuál es su destino final en el flujo?",
-                opciones: ["Se envía a Retrabajo para corregir con lápiz", "Rechazo Crítico Automático (descarte de materia prima)", "Se aprueba con observaciones estéticas"],
-                correcta: 1
+    <header class="bg-premiumDark/90 backdrop-blur-md text-white p-4 shadow-premium sticky top-0 z-50 border-b border-premiumGold/30">
+        <div class="container mx-auto flex justify-between items-center max-w-4xl">
+            <div>
+                <button onclick="volverAlMenu()" class="text-xs text-premiumGold hover:text-white transition-colors duration-200 flex items-center gap-1.5 mb-1 font-semibold tracking-wider uppercase">
+                    <span>⬅️</span> Volver al Menú
+                </button>
+                <h1 id="header-titulo" class="text-lg md:text-xl font-extrabold text-white tracking-wide drop-shadow-sm">Cargando Estación...</h1>
+            </div>
+            <div id="reloj-takt" class="bg-premiumSlate/80 border border-slate-700 rounded-xl px-4 py-1.5 text-right shadow-inner">
+                <span class="text-[9px] text-slate-400 block uppercase font-black tracking-widest">Simulador Takt Time</span>
+                <span id="cronometro" class="text-xl font-mono font-bold text-premiumGold drop-shadow-[0_2px_4px_rgba(212,175,55,0.2)]">00:00</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 max-w-3xl flex-grow flex flex-col justify-center my-4">
+
+        <div id="seccion-aprendizaje" class="bg-premiumSlate/40 backdrop-blur-lg rounded-2xl shadow-premium p-6 border border-slate-700/50 transition-all duration-300">
+            <div class="flex justify-between items-center border-b border-slate-700 pb-4 mb-5">
+                <h2 class="text-lg font-bold text-white flex items-center gap-2.5">
+                    <span class="text-premiumGold text-xl">📖</span> Procedimiento Operativo Estándar
+                </h2>
+                <span id="badge-tiempo-estandar" class="bg-premiumDark border border-slate-700 text-slate-300 font-mono text-xs px-3 py-1 rounded-full font-bold shadow-sm">
+                    Tiempo Estándar: --:--
+                </span>
+            </div>
+
+            <div class="bg-slate-950 rounded-xl aspect-video border border-slate-800 relative overflow-hidden mb-6 shadow-inner">
+                <iframe 
+                    id="video-frame"
+                    class="w-full h-full" 
+                    src="" 
+                    title="Reproductor de Video de Capacitación" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    referrerpolicy="strict-origin-when-cross-origin" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+
+            <div id="alerta-industrial" class="bg-amber-950/40 border-l-4 border-premiumGold p-4 rounded-xl text-sm text-amber-200/90 mb-6 border border-amber-900/30 shadow-sm leading-relaxed">
+            </div>
+
+            <div class="mb-6">
+                <h3 class="font-black text-slate-400 text-xs mb-2 uppercase tracking-widest flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 bg-premiumGold rounded-full"></span> Instrucciones Básicas del Puesto:
+                </h3>
+                <p id="texto-instruccion" class="text-sm text-slate-300 leading-relaxed bg-premiumDark/60 p-4 rounded-xl border border-slate-800">
+                </p>
+            </div>
+
+            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 flex flex-col gap-4 mb-6">
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="text-center sm:text-left">
+                        <p class="text-xs font-bold text-gray-700">⏱️ Práctica de Ritmo Operativo</p>
+                        <p class="text-[11px] text-gray-500">Inicia el cronómetro para medir si logras terminar el ensamblaje en el tiempo estándar.</p>
+                    </div>
+                    <button id="btn-cronometro" onclick="controlarCronometro()" class="w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs py-2 px-4 rounded transition">
+                        Iniciar Simulación de Ritmo
+                    </button>
+                </div>
+                
+                <div class="border-t pt-3 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="text-center sm:text-left">
+                        <p class="text-xs font-bold text-gray-700">📂 Evidencia de Trabajo (Opcional)</p>
+                        <p class="text-[11px] text-gray-500">¿Grabaste tu simulación? Sube el video para que el supervisor valide tu técnica en el almacén.</p>
+                    </div>
+                    <a href="https://forms.gle/cYbGuPobzzUiNCUK6" class="w-full sm:w-auto bg-[#1A2530] hover:bg-gray-800 text-[#D4AF37] text-center font-bold text-xs py-2 px-4 rounded border border-[#D4AF37] transition inline-block">
+                        Subir Video a Drive ⬆️
+                    </a>
+                </div>
+            </div>
+
+            <button onclick="activarExamen()" class="w-full bg-gradient-to-r from-premiumGold to-amber-500 text-premiumDark font-black py-4 px-6 rounded-xl shadow-gold-glow text-center block transition-transform active:scale-[0.99] uppercase tracking-widest text-sm hover:brightness-110">
+                Rendir Evaluación de Estación 📝
+            </button>
+        </div>
+
+        <div id="seccion-examen" class="bg-premiumSlate/40 backdrop-blur-lg rounded-2xl shadow-premium p-6 border-2 border-premiumGold/40 hidden">
+            <div class="border-b border-slate-700 pb-4 mb-5">
+                <span class="text-[10px] font-black uppercase tracking-widest text-premiumGold bg-premiumGold/10 px-2.5 py-0.5 rounded border border-premiumGold/20 inline-block mb-1">Evaluación Obligatoria</span>
+                <h2 id="examen-titulo" class="text-xl font-extrabold text-white tracking-wide">Cuestionario de Validación</h2>
+                <p class="text-xs text-slate-400 mt-1">Requisito industrial: Se necesita una precisión del 100% de aciertos para liberar la estación.</p>
+            </div>
+
+            <div id="quiz-dynamic-content" class="space-y-4"></div>
+
+            <button onclick="calificarExamen()" class="w-full mt-6 bg-gradient-to-r from-premiumGold to-amber-500 text-premiumDark font-black py-4 px-6 rounded-xl shadow-gold-glow transition hover:brightness-110 active:scale-[0.99] uppercase tracking-widest text-sm">
+                Enviar Respuestas para Validación
+            </button>
+        </div>
+
+        <div id="seccion-resultado" class="bg-premiumSlate/50 backdrop-blur-xl rounded-2xl shadow-premium p-8 text-center border border-slate-700/50 hidden">
+            <div id="resultado-icono" class="text-7xl mb-4 drop-shadow-md"></div>
+            <h2 id="resultado-titulo" class="text-2xl font-black mb-2 tracking-wide"></h2>
+            <p id="resultado-mensaje" class="text-slate-300 text-sm max-w-md mx-auto mb-8 leading-relaxed"></p>
+            <div id="resultado-acciones" class="flex justify-center gap-4">
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="bg-premiumDark/40 text-center py-4 text-[10px] text-slate-500 border-t border-slate-900/60 tracking-wider uppercase">
+        UNAJ - Industrial Engineering Platform &copy; 2026
+    </footer>
+
+    <script src="js/data.js"></script>
+    <script src="js/quiz.js"></script>
+    
+    <script>
+        let estacionActual = null;
+        let tiempoSegundos = 0;
+        let intervaloCronometro = null;
+        let cronometroCorriendo = false;
+
+        function inicializarApp() {
+            const id = localStorage.getItem('estacionSeleccionada') || 0;
+            estacionActual = datosEstaciones[id];
+
+            document.getElementById('header-titulo').innerText = `Estación ${estacionActual.numero}: ${estacionActual.nombre}`;
+            document.getElementById('badge-tiempo-estandar').innerText = `⏱️ Estándar: ${estacionActual.tiempoEstandar}`;
+            document.getElementById('texto-instruccion').innerText = estacionActual.instruccion;
+            document.getElementById('alerta-industrial').innerHTML = `💡 <strong>Nota Técnica de Calidad:</strong> ${estacionActual.alertas}`;
+            
+            // ASIGNAR LA URL DEL IFRAME DE FORMA DINÁMICA
+            // Se usa "https://www.youtube.com/embed/" seguido de la propiedad youtubeId configurada en js/data.js
+            const videoId = estacionActual.youtubeId || "6DspyzSTRSA";
+            document.getElementById('video-frame').src = `https://www.youtube.com/embed/${videoId}?rel=0`;
+        }
+
+        function controlarCronometro() {
+            const btn = document.getElementById('btn-cronometro');
+            if (!cronometroCorriendo) {
+                cronometroCorriendo = true;
+                btn.innerText = "Detener Ritmo";
+                btn.className = "w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white font-bold text-xs py-2.5 px-5 rounded-lg transition shadow-md uppercase tracking-wider";
+                
+                intervaloCronometro = setInterval(() => {
+                    tiempoSegundos++;
+                    let mins = Math.floor(tiempoSegundos / 60).toString().padStart(2, '0');
+                    let secs = (tiempoSegundos % 60).toString().padStart(2, '0');
+                    document.getElementById('cronometro').innerText = `${mins}:${secs}`;
+                }, 1000);
+            } else {
+                cronometroCorriendo = false;
+                btn.innerText = "Reiniciar Simulación";
+                btn.className = "w-full sm:w-auto bg-premiumGold hover:bg-premiumGoldHover text-premiumDark font-extrabold text-xs py-2.5 px-5 rounded-lg transition shadow-gold-glow uppercase tracking-wider";
+                clearInterval(intervaloCronometro);
+                tiempoSegundos = 0;
             }
-        ]
-    },
-    {
-        id: 1,
-        numero: 2,
-        nombre: "Corte de Piezas",
-        tiempoEstandar: "08:34 min",
-        instruccion: "Realizar el corte de las piezas trazadas utilizando el bisturí industrial sobre la mesa de corte. Mantener un ángulo constante de 45 grados para asegurar la limpieza del corte. Esta estación está identificada cuantitativamente como el Cuello de Botella del sistema productivo.",
-        alertas: "Monitorear el ritmo de trabajo. Al ser el cuello de botella, cualquier retraso aquí detiene el Takt Time de toda la línea de producción.",
-        preguntas: [
-            {
-                pregunta: "¿Por qué la estación de Corte es considerada el 'Cuello de Botella' de la línea?",
-                opciones: ["Porque requiere materiales más peligrosos", "Porque registra el mayor tiempo estándar por unidad en el estudio de tiempos", "Se eligió al azar para el control"],
-                correcta: 1
-            },
-            {
-                pregunta: "¿Cuál es el ángulo constante recomendado para operar el bisturí industrial de forma óptima?",
-                opciones: ["90 grados rectos", "15 grados planos", "45 grados constantes"],
-                correcta: 2
-            },
-            {
-                pregunta: "Si al finalizar el corte la pieza presenta rebabas o bordes desalineados modificables, ¿cómo se clasifica?",
-                opciones: ["Producto Aprobado", "Retrabajo (Falla estética modificable)", "Rechazo Definitivo"],
-                correcta: 1
+        }
+
+        function activarExamen() {
+            clearInterval(intervaloCronometro);
+            document.getElementById('seccion-aprendizaje').classList.add('hidden');
+            document.getElementById('seccion-examen').classList.remove('hidden');
+            cargarQuiz();
+        }
+
+        function mostrarPantallaResultado(aprobado, correctas, totales) {
+            document.getElementById('seccion-examen').classList.add('hidden');
+            const seccionRes = document.getElementById('seccion-resultado');
+            seccionRes.classList.remove('hidden');
+
+            const icono = document.getElementById('resultado-icono');
+            const titulo = document.getElementById('resultado-titulo');
+            const mensaje = document.getElementById('resultado-mensaje');
+            const acciones = document.getElementById('resultado-acciones');
+            acciones.innerHTML = '';
+
+            if (aprobado) {
+                icono.innerText = "🏆";
+                titulo.innerText = "¡Validación Exitosa!";
+                titulo.className = "text-2xl font-black text-green-400 mb-2 tracking-wide";
+                mensaje.innerText = `Calificación de calidad: ${correctas}/${totales} aciertos (100% de efectividad). Has asimilado con éxito los parámetros operativos del producto Premium. Módulo de estación liberado.`;
+
+                const btnMenu = document.createElement('button');
+                btnMenu.className = "bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition text-sm uppercase tracking-wider";
+                btnMenu.innerText = "Regresar al Menú Principal ➡️";
+                btnMenu.onclick = volverAlMenu;
+                acciones.appendChild(btnMenu);
+            } else {
+                icono.innerText = "🔄";
+                titulo.innerText = "Revisión Obligatoria de Planta";
+                titulo.className = "text-2xl font-bold text-red-400 mb-2 tracking-wide";
+                mensaje.innerText = `Efectividad operativa: ${correctas}/${totales}. Las tolerancias de una caja Premium requieren cero errores. Debes reevaluar el video instructivo y las alertas de cuello de botella de la estación.`;
+
+                const btnRepetir = document.createElement('button');
+                btnRepetir.className = "bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition text-sm uppercase tracking-wider";
+                btnRepetir.innerText = "Revisar Instrucción y Video";
+                btnRepetir.onclick = () => {
+                    seccionRes.classList.add('hidden');
+                    document.getElementById('seccion-aprendizaje').classList.remove('hidden');
+                    document.getElementById('cronometro').innerText = "00:00";
+                };
+                acciones.appendChild(btnRepetir);
             }
-        ]
-    },
-    {
-        id: 2,
-        numero: 3,
-        nombre: "Plegado Estructural",
-        tiempoEstandar: "04:00 min",
-        instruccion: "Marcar firmemente las aristas y líneas guía antes de realizar el doblez definitivo. Asegurar que las pestañas mantengan la cuadratura y el ángulo de encaje de la caja premium.",
-        alertas: "No doblar con demasiada fuerza para evitar romper el canal del cartón microcorrugado.",
-        preguntas: [
-            {
-                pregunta: "¿Qué acción asegura que el doblado sea limpio y no rompa el cartón?",
-                opciones: ["Humedecer las esquinas del cartón", "Marcar firmemente las aristas y líneas guía antes del doblez", "Doblar lo más rápido posible de un solo golpe"],
-                correcta: 1
-            },
-            {
-                pregunta: "Si el operario de Plegado termina antes que el de Corte, ¿qué concepto Lean se está rompiendo si sigue acumulando material?",
-                opciones: ["Flujo Continuo (Balanceo de línea)", "Uso de EPPs", "Cinco S (5S)"],
-                correcta: 0
-            },
-            {
-                pregunta: "¿Qué se debe verificar visualmente durante el proceso de plegado?",
-                opciones: ["Que el color del cartón sea brillante", "La cuadratura y el correcto ángulo de encaje de las pestañas", "Que no tenga polvo de almacenamiento"],
-                correcta: 1
-            }
-        ]
-    },
-    {
-        id: 3,
-        numero: 4,
-        nombre: "Pegado y Adhesión",
-        tiempoEstandar: "04:45 min",
-        instruccion: "Aplicar un cordón continuo de silicona caliente en las pestañas indicadas. Colocar los cierres de velcro en los puntos exactos del diseño. Para asegurar la calidad premium y evitar fallas críticas, ejercer presión bilateral fija por un mínimo de 3 minutos.",
-        alertas: "El desprendimiento del velcro o silicona es una de las fallas más comunes detectadas en la validación real. Respeta el tiempo de presión.",
-        preguntas: [
-            {
-                pregunta: "¿Cuál es el tiempo mínimo mandatorio para ejercer presión bilateral en los puntos de unión del velcro?",
-                opciones: ["10 a 20 segundos de forma ligera", "Mínimo 3 minutos fijos para asegurar la adhesión", "No requiere presión si la silicona está muy caliente"],
-                correcta: 1
-            },
-            {
-                pregunta: "De acuerdo al checklist CC-FP-001, ¿el despegue del velcro o una mala adherencia estructural se considera una falla de qué tipo?",
-                opciones: ["Falla No Crítica (Estética)", "Falla Crítica (Provoca el rechazo inmediato)", "Falla aceptable en el Producto 1"],
-                correcta: 1
-            },
-            {
-                pregunta: "¿Cómo debe aplicarse la silicona caliente en las uniones de las pestañas?",
-                opciones: ["Por goteo disperso en el centro", "Un cordón continuo y uniforme", "Solo en las esquinas extremas"],
-                correcta: 1
-            }
-        ]
-    },
-    {
-        id: 4,
-        numero: 5,
-        nombre: "Acabado y Control de Calidad",
-        tiempoEstandar: "05:05 min",
-        instruccion: "Inspeccionar minuciosamente la caja utilizando el Formulario de Validación de Calidad CC-FP-001 v.02. Verificar los 11 ítems críticos y 8 ítems no críticos. Retirar con cuidado cualquier excedente de silicona o suciedad superficial.",
-        alertas: "Esta es la última línea de defensa antes de que el producto llegue al cliente. La precisión en la evaluación es vital.",
-        preguntas: [
-            {
-                pregunta: "¿Cuántos ítems críticos evalúa el formulario oficial de control de calidad CC-FP-001 v.02?",
-                opciones: ["5 ítems", "11 ítems críticos", "8 ítems no críticos"],
-                correcta: 1
-            },
-            {
-                pregunta: "Si la caja final presenta una mancha de silicona superficial menor en el exterior (falla estética), ¿cuál es la acción según los criterios desarrollados?",
-                opciones: ["Clasificar como Rechazo definitivo", "Clasificar como Retrabajo (Falla estética modificable)", "Aprobar ignorando el manual"],
-                correcta: 1
-            },
-            {
-                pregunta: "¿Cuál es el objetivo final de aplicar el control de calidad riguroso en esta estación?",
-                opciones: ["Hacer que el proceso demore más tiempo", "Garantizar que el producto cumpla con el estándar Premium definido para el cliente", "Evaluar individualmente la velocidad de los operarios"],
-                correcta: 1
-            }
-        ]
-    }
-];
+        }
+
+        function volverAlMenu() {
+            window.location.href = 'index.html';
+        }
+
+        window.onload = inicializarApp;
+    </script>
+</body>
+</html>
