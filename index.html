@@ -3,101 +3,533 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menú de Capacitación - Cajas Premium</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        premiumDark: '#0F172A',     // Azul noche profundo
-                        premiumSlate: '#1E293B',    // Pizarra corporativa
-                        premiumGold: '#D4AF37',     // Oro metálico premium
-                        premiumGoldHover: '#B8932A' // Oro más oscuro para interacciones
-                    },
-                    boxShadow: {
-                        'premium': '0 10px 30px -10px rgba(15, 23, 42, 0.3)',
-                        'gold-glow': '0 4px 20px -2px rgba(212, 175, 55, 0.4)'
-                    }
-                }
-            }
+    <title>CAJAS PREMIUM INDUCCION</title>
+    <style>
+        :root {
+            --primary: #002f6c;
+            --primary-light: #e6f0fa;
+            --secondary: #d4af37;
+            --dark: #1a1a1a;
+            --light: #fdfdfd;
+            --gray: #7f8c8d;
+            --border-radius: 12px;
         }
-    </script>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #f4f7f6;
+            color: var(--dark);
+            line-height: 1.6;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--light);
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            overflow: hidden;
+            border: 1px solid #e1e8ed;
+        }
+
+        /* HEADER */
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            border-bottom: 5px solid var(--secondary);
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        header p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+        }
+
+        /* PRODUCT IMAGE & INFO */
+        .product-showcase {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            padding: 40px;
+            background: var(--primary-light);
+            border-bottom: 2px solid #e1e8ed;
+        }
+
+        .product-image-container {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            border: 2px solid var(--primary);
+            border-radius: var(--border-radius);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .box-placeholder {
+            width: 100%;
+            height: 250px;
+            background-color: #f9f9f9;
+            border: 2px dashed var(--gray);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            text-align: center;
+            padding: 15px;
+        }
+
+        .box-placeholder svg {
+            width: 80px;
+            height: 80px;
+            fill: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .product-details {
+            flex: 1.5;
+            min-width: 320px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .product-details h2 {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .product-details ul {
+            list-style-type: none;
+        }
+
+        .product-details li {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .product-details li::before {
+            content: "✔";
+            position: absolute;
+            left: 0;
+            color: var(--secondary);
+            font-weight: bold;
+        }
+
+        /* STATIONS GRID */
+        .stations-section {
+            padding: 45px 40px;
+        }
+
+        .stations-section h2 {
+            font-size: 2.2rem;
+            color: var(--primary);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .station-card {
+            background: white;
+            border: 2px solid #e1e8ed;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .station-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 8px 25px rgba(0,47,108,0.1);
+        }
+
+        .station-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background-color: var(--primary);
+        }
+
+        .station-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #f4f7f6;
+            padding-bottom: 15px;
+        }
+
+        .station-num {
+            background: var(--primary);
+            color: white;
+            font-weight: bold;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .station-time {
+            background: var(--secondary);
+            color: var(--dark);
+            font-weight: bold;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 1.1rem;
+        }
+
+        .station-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 12px;
+        }
+
+        .station-desc {
+            font-size: 1.1rem;
+            color: #555;
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 800px;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            animation: fadeIn 0.3s ease-out;
+            display: flex;
+            flex-direction: column;
+            max-height: 90vh;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-header {
+            background: var(--primary);
+            color: white;
+            padding: 25px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-size: 1.8rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2.2rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close-btn:hover {
+            color: var(--secondary);
+        }
+
+        .modal-body {
+            padding: 35px 30px;
+            overflow-y: auto;
+            font-size: 1.2rem;
+        }
+
+        .modal-section-title {
+            color: var(--primary);
+            border-left: 5px solid var(--secondary);
+            padding-left: 12px;
+            margin: 20px 0 12px 0;
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+
+        .modal-body ul {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .modal-body li {
+            margin-bottom: 8px;
+        }
+
+        /* FOOTER */
+        footer {
+            background: #2c3e50;
+            color: #ecf0f1;
+            text-align: center;
+            padding: 30px;
+            font-size: 1.1rem;
+            border-top: 3px solid var(--secondary);
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            header h1 { font-size: 2rem; }
+            .stations-section { padding: 25px 15px; }
+        }
+    </style>
 </head>
-<body class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 min-h-screen flex flex-col justify-between font-sans antialiased text-slate-200">
+<body>
 
-    <header class="bg-premiumDark/90 backdrop-blur-md text-white p-6 shadow-premium sticky top-0 z-50 text-center border-b border-premiumGold/30">
-        <h1 class="text-2xl md:text-3xl font-black tracking-wider text-premiumGold drop-shadow-sm">PREMIUM BOXES INDUCCIÓN</h1>
-        <p class="text-xs md:text-sm text-slate-400 mt-1 uppercase tracking-widest font-semibold">Plataforma de Validación Operativa por Estaciones de Trabajo</p>
-    </header>
+    <div class="container">
+        <header>
+            <h1>CAJAS PREMIUM INDUCCION</h1>
+            <p>Plataforma Interactiva para la Capacitación y Estandarización de Procesos</p>
+        </header>
 
-    <main class="container mx-auto p-6 max-w-5xl flex-grow">
-        <div class="mb-8 bg-premiumSlate/60 backdrop-blur-md border border-slate-700/60 rounded-2xl p-4 text-sm text-slate-300 text-center shadow-premium max-w-3xl mx-auto leading-relaxed">
-            💡 <strong class="text-premiumGold">Instrucción para el participante:</strong> Selecciona la estación asignada en tu línea de producción para iniciar tu entrenamiento. Para certificar y liberar el puesto, debes aprobar la evaluación final con el <span class="text-green-400 font-bold">100% de efectividad</span>.
+        <div class="product-showcase">
+            <div class="product-image-container">
+                <div class="box-placeholder">
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <polygon points="50,15 15,75 85,75" stroke="#002f6c" stroke-width="3" fill="none"/>
+                        <line x1="50" y1="15" x2="50" y2="75" stroke="#002f6c" stroke-width="2" stroke-dasharray="3,3" />
+                        <path d="M15,75 L30,60 L70,60 L85,75" stroke="#002f6c" stroke-width="2" fill="none"/>
+                    </svg>
+                    <p style="font-weight: bold; color: var(--primary);">DISEÑO: PRISMA TRIANGULAR</p>
+                    <p style="font-size: 0.9rem; color: var(--gray);">Estructura colapsable de cartón corrugado</p>
+                </div>
+            </div>
+            <div class="product-details">
+                <h2>Especificaciones del Producto</h2>
+                <ul>
+                    <li><strong>Dimensiones:</strong> Base de 18 cm, profundidad de 25 cm, altura de 12.2 cm.</li>
+                    <li><strong>Ángulo lateral:</strong> Prisma oblicuo a ~70° ± 2°.</li>
+                    <li><strong>Mecanismo de cierre:</strong> Cierre de seguridad mediante cintas Velcro.</li>
+                    <li><strong>Material:</strong> Plancha de cartón corrugado optimizado para plegado estructural.</li>
+                </ul>
+            </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="contenedor-menu">
-            </div>
-    </main>
-
-    <footer class="bg-premiumDark/40 text-center py-4 text-[10px] text-slate-500 border-t border-slate-900/60 tracking-wider uppercase">
-        UNAJ - Escuela Profesional de Ingeniería Industrial &copy; 2026
-    </footer>
-
-    <script src="js/data.js"></script>
-    
-    <script>
-        // Función para renderizar dinámicamente las tarjetas del menú
-        function renderizarMenu() {
-            const contenedor = document.getElementById('contenedor-menu');
-            if (!contenedor) return;
-            
-            contenedor.innerHTML = ''; // Limpiar contenedor
-
-            // Validación de seguridad por si el archivo js/data.js tarda en cargar en GitHub
-            if (typeof datosEstaciones === 'undefined' || !datosEstaciones) {
-                contenedor.innerHTML = `<p class="text-center text-red-400 col-span-full">Error: No se pudo cargar el banco de datos de las estaciones.</p>`;
-                return;
-            }
-
-            datosEstaciones.forEach((estacion) => {
-                // Verificar si esta estación específica ya fue aprobada
-                const esAprobada = localStorage.getItem(`estacion_${estacion.id}_aprobada`) === "true";
+        <div class="stations-section">
+            <h2>Estaciones de la Línea de Producción</h2>
+            <div class="grid-container">
                 
-                // Definir estilos dinámicos si es el cuello de botella (Estación 2: Corte)
-                const esCuelloBotella = (estacion.numero === 2);
-                const badgeEstacion = esCuelloBotella 
-                    ? `<span class="bg-red-950/60 text-red-400 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase border border-red-800/50">⚠️ Corte (Cuello de Botella)</span>`
-                    : `<span class="bg-premiumDark border border-slate-700 text-slate-300 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase">Estación ${estacion.numero}</span>`;
-
-                const tarjetaHTML = `
-                    <div class="bg-premiumSlate/40 backdrop-blur-lg rounded-2xl shadow-premium p-5 border ${esAprobada ? 'border-green-500/40 bg-green-950/10' : 'border-slate-800'} flex flex-col justify-between hover:border-premiumGold/50 transition-all duration-300 group">
-                        <div>
-                            <div class="flex justify-between items-center mb-3">
-                                ${badgeEstacion}
-                                ${esAprobada ? '<span class="text-xs font-bold text-green-400 flex items-center gap-1 drop-shadow-sm">🏆 Aprobada</span>' : ''}
-                            </div>
-                            <h3 class="text-xl font-extrabold text-white mb-2 group-hover:text-premiumGold transition-colors">${estacion.nombre}</h3>
-                            <p class="text-[11px] font-mono text-premiumGold mb-4 bg-premiumDark/80 border border-slate-800 inline-block px-2.5 py-1 rounded-lg shadow-inner">⏱️ Estándar: ${estacion.tiempoEstandar}</p>
-                            <p class="text-sm text-slate-400 line-clamp-3 mb-5 leading-relaxed">${estacion.instruccion}</p>
-                        </div>
-                        <button onclick="irAEstacion(${estacion.id})" class="w-full ${esAprobada ? 'bg-green-600 hover:bg-green-700 text-white' : 'bg-gradient-to-r from-premiumGold to-amber-500 text-premiumDark'} font-black py-3 rounded-xl shadow-md transition-all duration-150 active:scale-[0.98] uppercase tracking-wider text-xs">
-                            ${esAprobada ? 'Repasar Módulo 🔄' : 'Iniciar Estación ➡️'}
-                        </button>
+                <div class="station-card" onclick="openModal(1)">
+                    <div class="station-header">
+                        <div class="station-num">1</div>
+                        <div class="station-time">4:50 min</div>
                     </div>
-                `;
-                contenedor.innerHTML += tarjetaHTML;
-            });
+                    <div class="station-title">Diseño y Trazado</div>
+                    <div class="station-desc">Uso de moldes maestros para el marcado de precisión de líneas de corte y pestañas de doblado sobre la plancha.</div>
+                </div>
+
+                <div class="station-card" onclick="openModal(2)">
+                    <div class="station-header">
+                        <div class="station-num">2</div>
+                        <div class="station-time">3:47 min</div>
+                    </div>
+                    <div class="station-title">Corte y Troquelado</div>
+                    <div class="station-desc">Corte preciso de perfiles exteriores empleando bisturí sobre base rígida y troquelado de las asas superiores.</div>
+                </div>
+
+                <div class="station-card" onclick="openModal(3)">
+                    <div class="station-header">
+                        <div class="station-num">3</div>
+                        <div class="station-time">6:23 min</div>
+                    </div>
+                    <div class="station-title">Marcado y Plegado</div>
+                    <div class="station-desc">Debilitamiento guiado de las fibras del cartón mediante plegador manual para facilitar el colapsado limpio.</div>
+                </div>
+
+                <div class="station-card" onclick="openModal(4)">
+                    <div class="station-header">
+                        <div class="station-num">4</div>
+                        <div class="station-time">2:00 min</div>
+                    </div>
+                    <div class="station-title">Pegado y Laminado</div>
+                    <div class="station-desc">Aplicación controlada de silicona líquida caliente y ensamble de juntas con tiempos de fraguado medidos.</div>
+                </div>
+
+                <div class="station-card" onclick="openModal(5)">
+                    <div class="station-header">
+                        <div class="station-num">5</div>
+                        <div class="station-time">3:22 min</div>
+                    </div>
+                    <div class="station-title">Revisión y Acabado</div>
+                    <div class="station-desc">Inspección dimensional, control de tolerancias, instalación de los velcros y llenado de hoja CC-FP-001.</div>
+                </div>
+
+            </div>
+        </div>
+
+        <footer>
+            UNAJ - PLATAFORMA INGENIERIA INDUSTRIAL © 2026
+        </footer>
+    </div>
+
+    <div id="stationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Detalle de Estación</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                </div>
+        </div>
+    </div>
+
+    <script>
+        const stationData = {
+            1: {
+                title: "Estación 1: Diseño y Trazado",
+                time: "4:50 minutos",
+                activities: [
+                    "Recepción del cartón cortado a dimensiones brutas de suministro.",
+                    "Alineación de la plantilla acrílica maestra sobre el plano liso del cartón.",
+                    "Marcado periférico de las aristas y líneas de doblez con lápiz técnico de punta blanda.",
+                    "Verificación visual de la simetría antes de transferir a la siguiente estación."
+                ],
+                tools: ["Plantilla maestra rígida", "Lápiz técnico", "Regla metálica de 50 cm"],
+                safety: ["Manipulación ordenada del cartón para evitar cortes superficiales en la piel."]
+            },
+            2: {
+                title: "Estación 2: Corte y Troquelado",
+                time: "3:47 minutos",
+                activities: [
+                    "Fijación del cartón marcado sobre la plancha de corte autocicatrizante.",
+                    "Cortes longitudinales firmes utilizando el bisturí guiado por regla de acero.",
+                    "Troquelado manual del asa superior cuidando de no rasgar el canal interior del cartón.",
+                    "Eliminación de rebabas e imperfecciones en aristas."
+                ],
+                tools: ["Cúter / Bisturí industrial", "Regla metálica", "Base de corte (tabla de apoyo)"],
+                safety: ["Uso obligatorio de guantes anticorte en la mano de apoyo.", "Mantener los dedos detrás de la trayectoria de corte de la regla."]
+            },
+            3: {
+                title: "Estación 3: Marcado y Plegado",
+                time: "6:23 minutos",
+                activities: [
+                    "Identificación de las líneas de marcado de doblez trazadas en la Estación 1.",
+                    "Pasado firme del plegador manual de hueso/teflón aplicando presión moderada.",
+                    "Ejecución de pre-dobleces en ángulos de 90° y 120° para acostumbrar la memoria del material.",
+                    "Comprobación de la flexibilidad mecánica y resistencia de las bisagras estructurales."
+                ],
+                tools: ["Plegador manual ergonómico", "Regla de alineamiento"],
+                safety: ["Controlar la fuerza de empuje para evitar sobreesfuerzos musculares en la muñeca."]
+            },
+            4: {
+                title: "Estación 4: Pegado y Laminado",
+                time: "2:00 minutos",
+                activities: [
+                    "Precalentamiento óptimo de la pistola de silicona.",
+                    "Aplicación de un cordón continuo de adhesivo termofusible de 3 mm sobre las pestañas internas.",
+                    "Prensado inmediato de las uniones utilizando pinzas para asegurar un contacto óptimo.",
+                    "Respetar el tiempo mínimo de reposo sin mover las piezas para garantizar la cristalización."
+                ],
+                tools: ["Pistola aplicadora de silicona caliente", "Pinzas de sujeción rápida"],
+                safety: ["Uso de guantes térmicos ligeros para evitar quemaduras por goteo.", "Mantener la pistola sobre su soporte metálico cuando no esté en operación."]
+            },
+            5: {
+                title: "Estación 5: Revisión y Acabado",
+                time: "3:22 minutos",
+                activities: [
+                    "Revisión de dimensiones finales con regla de calibración (tolerancia ±2mm).",
+                    "Posicionamiento de las almohadillas autoadhesivas de velcro mediante el molde localizador.",
+                    "Validación dimensional del ángulo de inclinación lateral (~70°).",
+                    "Anotación del lote en el Checklist de Calidad CC-FP-001 V.03."
+                ],
+                tools: ["Calibrador / Regla de precisión", "Molde posicionador de velcro", "Checklist impreso"],
+                safety: ["Limpieza inmediata de excedentes de adhesivo frío para asegurar una presentación óptima."]
+            }
+        };
+
+        function openModal(id) {
+            const data = stationData[id];
+            document.getElementById('modalTitle').innerText = data.title;
+            
+            let html = `
+                <p><strong>Tiempo Estándar Estandarizado:</strong> <span style="color:var(--primary); font-weight:bold;">${data.time}</span></p>
+                
+                <div class="modal-section-title">Secuencia de Actividades</div>
+                <ul>
+                    ${data.activities.map(act => `<li>${act}</li>`).join('')}
+                </ul>
+                
+                <div class="modal-section-title">Equipos y Herramientas</div>
+                <ul>
+                    ${data.tools.map(tool => `<li>${tool}</li>`).join('')}
+                </ul>
+                
+                <div class="modal-section-title">Consideraciones de Seguridad</div>
+                <ul>
+                    ${data.safety.map(safe => `<li>${safe}</li>`).join('')}
+                </ul>
+            `;
+            
+            document.getElementById('modalBody').innerHTML = html;
+            document.getElementById('stationModal').style.display = 'flex';
         }
 
-        function irAEstacion(id) {
-            // Guardar id seleccionado y forzar redirección limpia de ventana
-            localStorage.setItem('estacionSeleccionada', id);
-            window.location.assign('app.html');
+        function closeModal() {
+            document.getElementById('stationModal').style.display = 'none';
         }
 
-        // Ejecutar la renderización al cargar por completo el árbol DOM de la página
-        document.addEventListener("DOMContentLoaded", renderizarMenu);
+        // Cerrar al hacer clic fuera del contenido
+        window.onclick = function(event) {
+            const modal = document.getElementById('stationModal');
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
     </script>
 </body>
 </html>
