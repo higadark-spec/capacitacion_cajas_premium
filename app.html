@@ -10,10 +10,10 @@
             theme: {
                 extend: {
                     colors: {
-                        premiumDark: '#0F172A',     // Azul noche profundo
-                        premiumSlate: '#1E293B',    // Pizarra corporativa
-                        premiumGold: '#D4AF37',     // Oro metálico premium
-                        premiumGoldHover: '#B8932A' // Oro más oscuro para interacciones
+                        premiumDark: '#0F172A',     
+                        premiumSlate: '#1E293B',    
+                        premiumGold: '#D4AF37',     
+                        premiumGoldHover: '#B8932A' 
                     },
                     boxShadow: {
                         'premium': '0 10px 30px -10px rgba(15, 23, 42, 0.3)',
@@ -24,7 +24,6 @@
         }
     </script>
     <style>
-        /* Animación sutil de respiración para el cartel de simulación en vivo */
         @keyframes pulse-subtle {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.6; }
@@ -56,8 +55,8 @@
                 <h2 class="text-lg font-bold text-white flex items-center gap-2.5">
                     <span class="text-premiumGold text-xl">📖</span> Procedimiento Operativo Estándar
                 </h2>
-                <span id="badge-tiempo-estandar" class="bg-premiumDark border border-slate-700 text-slate-300 font-mono text-xs px-3 py-1 rounded-full font-bold shadow-sm">
-                    Tiempo Estándar: --:--
+                <span id="badge-tiempo-estandar" class="bg-premiumDark border border-slate-700 text-slate-300 font-mono text-xs px-3.5 py-1.5 rounded-full shadow-sm">
+                    Tiempo Estándar: <span class="text-base font-black text-premiumGold">--:--</span>
                 </span>
             </div>
 
@@ -137,7 +136,7 @@
     </main>
 
     <footer class="bg-premiumDark/40 text-center py-4 text-[10px] text-slate-500 border-t border-slate-900/60 tracking-wider uppercase">
-        UNAJ - Industrial Engineering Platform &copy; 2026
+        UNAJ - PLATAFORMA INGENIERIA INDUSTRIAL &copy; 2026
     </footer>
 
     <script src="js/data.js"></script>
@@ -154,12 +153,11 @@
             estacionActual = datosEstaciones[id];
 
             document.getElementById('header-titulo').innerText = `Estación ${estacionActual.numero}: ${estacionActual.nombre}`;
-            document.getElementById('badge-tiempo-estandar').innerText = `⏱️ Estándar: ${estacionActual.tiempoEstandar}`;
+            // Aplicación del tiempo estándar con tamaño de fuente aumentado
+            document.getElementById('badge-tiempo-estandar').innerHTML = `⏱️ Estándar: <span class="text-base font-black text-premiumGold">${estacionActual.tiempoEstandar}</span>`;
             document.getElementById('texto-instruccion').innerText = estacionActual.instruccion;
             document.getElementById('alerta-industrial').innerHTML = `💡 <strong>Nota Técnica de Calidad:</strong> ${estacionActual.alertas}`;
             
-            // ASIGNAR LA URL DEL IFRAME DE FORMA DINÁMICA
-            // Se usa "https://www.youtube.com/embed/" seguido de la propiedad youtubeId configurada en js/data.js
             const videoId = estacionActual.youtubeId || "6DspyzSTRSA";
             document.getElementById('video-frame').src = `https://www.youtube.com/embed/${videoId}?rel=0`;
         }
