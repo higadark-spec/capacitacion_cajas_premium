@@ -39,6 +39,42 @@
     </header>
 
     <main class="container mx-auto p-6 max-w-5xl flex-grow">
+        
+        <section class="mb-8 max-w-4xl mx-auto bg-premiumSlate/80 border border-slate-700/50 rounded-2xl p-6 shadow-premium">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+                <div>
+                    <h2 class="text-lg font-black text-white flex items-center gap-2">
+                        <span class="text-premiumGold">📊</span> Progreso de Capacitación de Operador
+                    </h2>
+                    <p class="text-xs text-slate-400">Estado de acreditación para flujo continuo de producción</p>
+                </div>
+                <div id="badge-rango" class="px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider border">
+                    Calculando Estado...
+                </div>
+            </div>
+
+            <div class="w-full bg-slate-950 rounded-full h-4 overflow-hidden p-0.5 border border-slate-800 mb-3">
+                <div id="barra-progreso" class="bg-gradient-to-r from-amber-500 to-premiumGold h-full rounded-full transition-all duration-500 shadow-gold-glow" style="width: 0%"></div>
+            </div>
+
+            <div class="flex justify-between items-center text-xs text-slate-400 font-mono">
+                <span>Módulos validados: <strong id="texto-conteo-modulos" class="text-white">0 / 5</strong></span>
+                <span>Porcentaje de avance: <strong id="texto-porcentaje" class="text-premiumGold text-sm">0%</strong></span>
+            </div>
+
+            <div id="contenedor-certificado" class="mt-5 border-t border-slate-800 pt-4 hidden">
+                <div class="bg-green-950/20 border border-green-500/30 rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="text-center sm:text-left">
+                        <p class="text-sm font-bold text-green-400">🏆 ¡Homologación Operativa Completa!</p>
+                        <p class="text-xs text-slate-300">Has aprobado el 100% de las estaciones con cero defectos teóricos en los procedimientos standard.</p>
+                    </div>
+                    <button onclick="emitirAcreditacion()" class="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-black text-xs py-2.5 px-5 rounded-xl shadow-md transition transform hover:scale-[1.02] uppercase tracking-wider">
+                        Emitir Certificado 📄
+                    </button>
+                </div>
+            </div>
+        </section>
+
         <div class="mb-8 bg-premiumSlate/60 backdrop-blur-md border border-slate-700/60 rounded-2xl p-4 text-sm text-slate-300 text-center shadow-premium max-w-3xl mx-auto leading-relaxed">
             💡 <strong class="text-premiumGold">Instrucción para el participante:</strong> Selecciona la estación asignada en tu línea de producción para iniciar tu entrenamiento. Para certificar y liberar el puesto, debes aprobar la evaluación final con el <span class="text-green-400 font-bold">100% de efectividad</span>.
         </div>
@@ -65,11 +101,15 @@
                 return;
             }
 
+            let estacionesAprobadas = 0;
+            const totalEstaciones = datosEstaciones.length;
+
             datosEstaciones.forEach((estacion) => {
                 const esAprobada = localStorage.getItem(`estacion_${estacion.id}_aprobada`) === "true";
+                if (esAprobada) {
+                    estacionesAprobadas++;
+                }
                 
-                // Se quitó la advertencia de Cuello de Botella de la Estación 2.
-                // Todas las estaciones muestran su número de forma uniforme.
                 const badgeEstacion = `<span class="bg-premiumDark border border-slate-700 text-slate-300 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase">Estación ${estacion.numero}</span>`;
 
                 const tarjetaHTML = `
@@ -92,6 +132,40 @@
                 `;
                 contenedor.innerHTML += tarjetaHTML;
             });
+
+            // Lógica de cálculo y actualización de la barra de progreso
+            calcularProgreso(estacionesAprobadas, totalEstaciones);
+        }
+
+        function calcularProgreso(aprobadas, totales) {
+            const porcentaje = Math.round((aprobadas / totales) * 100);
+            
+            // Actualizar elementos visuales de progreso
+            document.getElementById('barra-progreso').style.width = `${porcentaje}%`;
+            document.getElementById('texto-conteo-modulos').innerText = `${aprobadas} / ${totales}`;
+            document.getElementById('texto-porcentaje').innerText = `${porcentaje}%`;
+
+            const badgeRango = document.getElementById('badge-rango');
+            const contenedorCertificado = document.getElementById('contenedor-certificado');
+
+            // Actualización de la Matriz ILUO / Rango de Habilitación
+            if (porcentaje === 0) {
+                badgeRango.className = "px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-red-950/40 border-red-500/50 text-red-400";
+                badgeRango.innerText = "🔴 Sin Entrenamiento";
+                contenedorCertificado.classList.add('hidden');
+            } else if (porcentaje > 0 && porcentaje < 100) {
+                badgeRango.className = "px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-amber-950/40 border-amber-500/50 text-amber-400";
+                badgeRango.innerText = "🟡 Autonomía Parcial";
+                contenedorCertificado.classList.add('hidden');
+            } else if (porcentaje === 100) {
+                badgeRango.className = "px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-green-950/40 border-green-500/50 text-green-400";
+                badgeRango.innerText = "🟢 Operador Homologado";
+                contenedorCertificado.classList.remove('hidden'); // Desbloquea la certificación final
+            }
+        }
+
+        function emitirAcreditacion() {
+            alert("Acreditación Validada.\nCódigo de Credencial: UNAJ-IND-2026-OP" + Math.floor(1000 + Math.random() * 9000) + "\nEl operario se encuentra formalmente facultado para cubrir cualquiera de las 5 estaciones en el flujo de producción de Cajas Premium.");
         }
 
         function irAEstacion(id) {
