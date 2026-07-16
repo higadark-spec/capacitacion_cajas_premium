@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menú de Capacitación - Cajas Premium</title>
+    <title>"CAJAS PREMIUM" INDUCCIÓN</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        premiumDark: '#0F172A',     // Azul noche profundo
-                        premiumSlate: '#1E293B',    // Pizarra corporativa
-                        premiumGold: '#D4AF37',     // Oro metálico premium
-                        premiumGoldHover: '#B8932A' // Oro más oscuro para interacciones
+                        premiumDark: '#0F172A',     
+                        premiumSlate: '#1E293B',    
+                        premiumGold: '#D4AF37',     
+                        premiumGoldHover: '#B8932A' 
                     },
                     boxShadow: {
                         'premium': '0 10px 30px -10px rgba(15, 23, 42, 0.3)',
@@ -27,8 +27,15 @@
 <body class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 min-h-screen flex flex-col justify-between font-sans antialiased text-slate-200">
 
     <header class="bg-premiumDark/90 backdrop-blur-md text-white p-6 shadow-premium sticky top-0 z-50 text-center border-b border-premiumGold/30">
-        <h1 class="text-2xl md:text-3xl font-black tracking-wider text-premiumGold drop-shadow-sm">PREMIUM BOXES INDUCCIÓN</h1>
-        <p class="text-xs md:text-sm text-slate-400 mt-1 uppercase tracking-widest font-semibold">Plataforma de Validación Operativa por Estaciones de Trabajo</p>
+        <div class="container mx-auto flex flex-col md:flex-row justify-center items-center gap-4 max-w-4xl">
+            <div class="w-16 h-16 bg-gradient-to-tr from-amber-500 to-premiumGold rounded-xl flex items-center justify-center shadow-gold-glow animate-bounce duration-1000">
+                <span class="text-3xl text-slate-950 font-black">📦</span>
+            </div>
+            <div>
+                <h1 class="text-2xl md:text-3xl font-black tracking-wider text-premiumGold drop-shadow-sm">"CAJAS PREMIUM" INDUCCIÓN</h1>
+                <p class="text-xs md:text-sm text-slate-400 mt-1 uppercase tracking-widest font-semibold">Plataforma de Validación Operativa por Estaciones de Trabajo</p>
+            </div>
+        </div>
     </header>
 
     <main class="container mx-auto p-6 max-w-5xl flex-grow">
@@ -37,7 +44,7 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="contenedor-menu">
-            </div>
+        </div>
     </main>
 
     <footer class="bg-premiumDark/40 text-center py-4 text-[10px] text-slate-500 border-t border-slate-900/60 tracking-wider uppercase">
@@ -47,28 +54,23 @@
     <script src="js/data.js"></script>
     
     <script>
-        // Función para renderizar dinámicamente las tarjetas del menú
         function renderizarMenu() {
             const contenedor = document.getElementById('contenedor-menu');
             if (!contenedor) return;
             
-            contenedor.innerHTML = ''; // Limpiar contenedor
+            contenedor.innerHTML = ''; 
 
-            // Validación de seguridad por si el archivo js/data.js tarda en cargar en GitHub
             if (typeof datosEstaciones === 'undefined' || !datosEstaciones) {
                 contenedor.innerHTML = `<p class="text-center text-red-400 col-span-full">Error: No se pudo cargar el banco de datos de las estaciones.</p>`;
                 return;
             }
 
             datosEstaciones.forEach((estacion) => {
-                // Verificar si esta estación específica ya fue aprobada
                 const esAprobada = localStorage.getItem(`estacion_${estacion.id}_aprobada`) === "true";
                 
-                // Definir estilos dinámicos si es el cuello de botella (Estación 2: Corte)
-                const esCuelloBotella = (estacion.numero === 2);
-                const badgeEstacion = esCuelloBotella 
-                    ? `<span class="bg-red-950/60 text-red-400 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase border border-red-800/50">⚠️ Corte (Cuello de Botella)</span>`
-                    : `<span class="bg-premiumDark border border-slate-700 text-slate-300 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase">Estación ${estacion.numero}</span>`;
+                // Se quitó la advertencia de Cuello de Botella de la Estación 2.
+                // Todas las estaciones muestran su número de forma uniforme.
+                const badgeEstacion = `<span class="bg-premiumDark border border-slate-700 text-slate-300 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase">Estación ${estacion.numero}</span>`;
 
                 const tarjetaHTML = `
                     <div class="bg-premiumSlate/40 backdrop-blur-lg rounded-2xl shadow-premium p-5 border ${esAprobada ? 'border-green-500/40 bg-green-950/10' : 'border-slate-800'} flex flex-col justify-between hover:border-premiumGold/50 transition-all duration-300 group">
@@ -78,7 +80,9 @@
                                 ${esAprobada ? '<span class="text-xs font-bold text-green-400 flex items-center gap-1 drop-shadow-sm">🏆 Aprobada</span>' : ''}
                             </div>
                             <h3 class="text-xl font-extrabold text-white mb-2 group-hover:text-premiumGold transition-colors">${estacion.nombre}</h3>
-                            <p class="text-[11px] font-mono text-premiumGold mb-4 bg-premiumDark/80 border border-slate-800 inline-block px-2.5 py-1 rounded-lg shadow-inner">⏱️ Estándar: ${estacion.tiempoEstandar}</p>
+                            <p class="text-sm font-mono text-slate-300 mb-4 bg-premiumDark/80 border border-slate-800 inline-block px-3 py-1.5 rounded-lg shadow-inner">
+                                ⏱️ Estándar: <span class="text-lg font-black text-premiumGold">${estacion.tiempoEstandar}</span>
+                            </p>
                             <p class="text-sm text-slate-400 line-clamp-3 mb-5 leading-relaxed">${estacion.instruccion}</p>
                         </div>
                         <button onclick="irAEstacion(${estacion.id})" class="w-full ${esAprobada ? 'bg-green-600 hover:bg-green-700 text-white' : 'bg-gradient-to-r from-premiumGold to-amber-500 text-premiumDark'} font-black py-3 rounded-xl shadow-md transition-all duration-150 active:scale-[0.98] uppercase tracking-wider text-xs">
@@ -91,12 +95,10 @@
         }
 
         function irAEstacion(id) {
-            // Guardar id seleccionado y forzar redirección limpia de ventana
             localStorage.setItem('estacionSeleccionada', id);
             window.location.assign('app.html');
         }
 
-        // Ejecutar la renderización al cargar por completo el árbol DOM de la página
         document.addEventListener("DOMContentLoaded", renderizarMenu);
     </script>
 </body>
